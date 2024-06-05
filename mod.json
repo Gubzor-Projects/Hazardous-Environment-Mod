@@ -1,0 +1,20 @@
+{
+  "Name": "[GM&P] Hazardous Environment Mod",
+  "Author": "Gubzor (Um, Idk)",
+  "Description": "Adds radioactive stuff, along side hazmat suits, gasmasks and oxygen tank.",
+  "ModVersion": "yes",
+  "GameVersion": "1.27+",
+  "ThumbnailPath": "Thumb.png",
+  "EntryPoint": "RadioactiveShit.Mod",
+  "Tags": [],
+  "Scripts": [
+    "Code/script.cs",
+    "Code/RadioactiveDebris.cs",
+    "Code/RadioactiveCloud.cs",
+    "Code/UmAPI.cs",
+    "Code/Resources.cs"
+  ],
+  "Active": true,
+  "UGCIdentity": null,
+  "CreatorUGCIdentity": null
+}
