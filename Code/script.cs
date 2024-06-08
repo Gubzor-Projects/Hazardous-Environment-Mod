@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using static RadioactiveShit.Resources;
 using UmmAPI;
+using TMPro;
 namespace RadioactiveShit
 {
     public class Mod : MonoBehaviour
@@ -425,6 +426,44 @@ namespace RadioactiveShit
                 }
             );
             #endregion
+            #region Geiger Meter
+            ModAPI.Register(
+                new Modification()
+                {
+                    OriginalItem = ModAPI.FindSpawnable("Rod"),
+                    NameOverride = "Geiger Meter" + ModTag,
+                    NameToOrderByOverride = "Radioactive",
+                    DescriptionOverride = "For measuring radioactivity.",
+                    CategoryOverride = ModAPI.FindCategory(CategoryName),
+                    ThumbnailOverride = ModAPI.LoadSprite("Thumbnails/RadioactiveBarrel.png", 5f),
+                    AfterSpawn = (Instance) =>
+                    {
+                        Instance.GetComponent<SpriteRenderer>().sprite = ModAPI.LoadSprite("Sprites/Geiger Meter.png");
+                        Instance.FixColliders();
+
+                        Instance.GetComponent<PhysicalBehaviour>().InitialMass = 2 * 0.025f;
+                        Instance.GetComponent<PhysicalBehaviour>().TrueInitialMass = 2 * 0.025f;
+                        Instance.GetComponent<PhysicalBehaviour>().rigidbody.mass = 2 * 0.025f;
+
+                        GameObject Text = Instantiate<GameObject>(ModAPI.FindSpawnable("Text Display").Prefab.transform.Find("Text").gameObject, Instance.transform.position, Instance.transform.rotation);
+                        Text.transform.SetParent(Instance.transform);
+                        Text.transform.localPosition = new Vector3(-0.2062f, 0.225f);
+                        Text.transform.localScale = new Vector3(0.4502f, 0.4502f);
+                        TextMeshPro TextScript = Text.GetComponent<TextMeshPro>();
+                        TextScript.text = "0";
+                        TextScript.color = Color.green;
+                        TextScript.enableAutoSizing = false;
+                        TextScript.fontSize = 1f;
+
+
+                        if (!Instance.GetComponent<FirstSpawn>())
+                        {
+                            Instance.AddComponent<FirstSpawn>();
+                        }
+                    }
+                }
+            );
+            #endregion
             #region Radioactive Barrel
             ModAPI.Register(
                 new Modification()
@@ -488,7 +527,7 @@ namespace RadioactiveShit
         public Sprite Middlebody;
         public void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>())
+            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>() && !other.gameObject.transform.root.gameObject.GetComponent<Hazmat_OxygenTank_Functionality>())
             {
                 var UpperBody = other.gameObject.transform.root.Find("Body/UpperBody").gameObject;
                 var MiddleBody = other.gameObject.transform.root.Find("Body/MiddleBody").gameObject;
@@ -506,7 +545,7 @@ namespace RadioactiveShit
         public Sprite Head;
         public void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>())
+            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>() && !other.gameObject.transform.root.gameObject.GetComponent<Hazmat_Gasmask_Functionality>())
             {
                 var Head = other.gameObject.transform.root.Find("Head").gameObject;
                 UmAPI.CreateDetailObject(Head, this.Head, Vector3.zero);
@@ -529,7 +568,7 @@ namespace RadioactiveShit
         public Sprite Lowerleg;
         public void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>())
+            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>() && !other.gameObject.transform.root.gameObject.GetComponent<Hazmat_Suit2_Functionality>())
             {
                 Texture2D OriginalSkin = other.transform.root.Find("Head").GetComponent<SpriteRenderer>().sprite.texture;
 
@@ -607,7 +646,7 @@ namespace RadioactiveShit
         public Sprite Lowerleg;
         public void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>())
+            if (other.gameObject.GetComponent<LimbBehaviour>() && other.gameObject.transform.root.gameObject.GetComponent<PersonBehaviour>() && !other.gameObject.transform.root.gameObject.GetComponent<Hazmat_Suit_Functionality>())
             {
                 Texture2D OriginalSkin = other.transform.root.Find("Head").GetComponent<SpriteRenderer>().sprite.texture;
 
@@ -675,6 +714,13 @@ namespace RadioactiveShit
         }
     }
     #endregion
+
+    public class GeigerMeter : MonoBehaviour
+    {
+        public TextMeshPro Text;
+
+        void Start
+    }
 
     public class RadioactiveCloudNuke : MonoBehaviour
     {
